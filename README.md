@@ -48,6 +48,19 @@ OpenSEM 将结构方程模型（SEM）分析流程转化为更易理解、便于
 
 ## 快速启动
 
+**环境要求：** Python 3.10+、Node.js 18+（仅「方式一」需要）；Docker Desktop（仅「方式二」需要）。
+
+获取代码：在 GitHub 点击 **Code → Download ZIP** 解压，或执行 `git clone https://github.com/heyewuyue2025/OpenSEM.git`。两种方式对「跑起来」没有区别。
+
+### 如何选择启动方式
+
+| 情况 | 说明 |
+|------|------|
+| 只想快速体验主流程 | 按下方「方式一：本地开发」即可，核心统计引擎为 **semopy** |
+| 要用 MI、不变性序列等完整 lavaan 能力 | 本机需安装 **R + lavaan**，或改用「方式二：Docker」的 **strict 模式**（更省事） |
+| 不想折腾 Python / Node 环境 | 用「方式二：Docker」：`copy .env.example .env`（Windows）或 `cp .env.example .env`（Linux/macOS），再执行 `docker compose up -d` |
+| ZIP 下载 | 完全够用；与 `git clone` 对本地跑通项目无区别 |
+
 ### 方式一：本地开发（推荐）
 
 ```bash
