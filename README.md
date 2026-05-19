@@ -123,29 +123,28 @@ opensem/
 │   │   ├── router/
 │   │   └── api/
 │   └── package.json
-└── OpenSEM_PRD_V2.docx
+├── demo/              # 示例数据
+├── docs/ops/          # 部署与运维
+└── CONTRIBUTING.md
 ```
 
-## Phase 1 路线图
+## 亮点
 
-- [x] 项目 scaffold
-- [x] 数据导入解析 (CSV/XLSX/SAV)
-- [x] 表单化 CFA/Path 建模
-- [x] semopy 单群组 ML 估算
-- [x] 拟合度红绿灯
-- [x] APA 表格 + lavaan 导出
+- **表单化 SEM**：通过表单配置 CFA / 路径模型，自动生成 `lavaan` 语法
+- **结果即论文素材**：拟合指数与红黄绿提示，支持导出 APA 表格与语法文件
+- **双模式部署**：Docker strict（R + lavaan 全功能）/ lite（快速体验主流程）
 
-## 当前可用流程（Phase 1）
+## 能做什么
 
-1. 在 `数据管理` 页上传数据，拿到 `data_key`
-2. 在 `表单建模` 页生成 `lavaan` 语法
-3. 在 `结果` 页运行 ML 估算，查看 χ²/df、RMSEA、SRMR、TLI、CFI 与红黄绿状态
-4. 在 `结果` 页导出：
-   - APA 基础表：`{project}_{YYYYMMDD_HHMMSS}_apa_table.xlsx`
-   - APA 基础报告：`{project}_{YYYYMMDD_HHMMSS}_apa_table.docx`
-   - 模型语法：`{project}_{YYYYMMDD_HHMMSS}_model.lavaan.txt`
+| 环节 | 说明 |
+|------|------|
+| 数据 | 导入 CSV / XLSX / SAV，查看变量与样本概况 |
+| 建模 | 表单配置测量与结构模型 |
+| 分析 | ML 估计与常用拟合指数（χ²/df、RMSEA、SRMR、TLI、CFI） |
+| 导出 | APA xlsx/docx、lavaan 语法文本 |
 
-## 产品化补充（当前已支持）
+典型路径：**上传数据 → 表单建模 → 结果页估算并导出**。
 
-- 本地持久化：刷新页面后自动恢复最近一次数据概览、lavaan 语法、拟合度结果
-- 一键重置：顶部 `Reset` 按钮可清空当前分析会话（数据 / 模型 / 结果）
+## 会话与隐私
+
+分析会话保存在浏览器本地，刷新后可恢复；可用 **Reset** 清空。请勿向不可信环境上传含敏感信息的原始数据。
