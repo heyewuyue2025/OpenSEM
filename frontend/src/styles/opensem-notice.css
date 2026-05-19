@@ -1,0 +1,67 @@
+/**
+ * OpenSEM 全局 notice（单一来源）
+ * 本轮仅统一 notice，不触及 dialog。
+ */
+
+.osem-notice {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  width: min(460px, calc(100vw - 2rem));
+  border: 1px solid var(--line-strong);
+  border-radius: 0.95rem;
+  background: var(--surface-elevated);
+  box-shadow: var(--shadow-glow);
+  padding: 0.72rem 0.84rem 0.84rem;
+  z-index: 1200;
+  backdrop-filter: blur(8px);
+}
+
+.osem-notice__title {
+  font-size: 0.82rem;
+  font-weight: 700;
+  margin-bottom: 0.26rem;
+  color: var(--text-primary);
+}
+
+.osem-notice__message {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.45;
+  margin-right: 3.3rem;
+  white-space: pre-wrap;
+}
+
+.osem-notice__close {
+  position: absolute;
+  right: 0.6rem;
+  top: 0.55rem;
+  border: 1px solid var(--border-light);
+  background: rgba(255, 255, 255, 0.02);
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0.16rem 0.45rem;
+}
+
+.osem-notice__close:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  box-shadow: var(--focus-ring);
+}
+
+.osem-notice--error {
+  border-color: rgba(240, 122, 134, 0.66);
+}
+
+.osem-notice--warning {
+  border-color: rgba(243, 178, 95, 0.72);
+}
+
+.osem-notice--success {
+  border-color: rgba(57, 197, 136, 0.68);
+}
+
+.osem-notice--info {
+  border-color: rgba(139, 203, 255, 0.68);
+}

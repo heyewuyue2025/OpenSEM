@@ -1,0 +1,60 @@
+/**
+ * App 壳层：次导航、顶栏与全局 notice/dialog 在 375/768 档的残余对齐与可聚焦性。
+ * 侧向节奏使用 `--osem-app-chrome-pad-x`（与三核心页 `--osem-core-outer-pad` 同 clamp 源，见 `appChromeRhythm.js`）。
+ */
+
+/* 次导航可聚焦，与 osem-core-page :focus-visible 同环 */
+.sub-nav a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  box-shadow: var(--focus-ring);
+}
+
+/* 顶栏浅底 */
+.header .menu-btn:focus-visible,
+.header .icon-btn:focus-visible,
+.header .btn-ghost:focus-visible,
+.header .btn-cta:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  box-shadow: var(--focus-ring);
+}
+
+/* 窄屏下全局 notice 左右贴齐壳层，避免与 `width: min(...)` 叠加裁切感 */
+@media (max-width: 767.98px) {
+  .osem-notice {
+    right: var(--osem-app-chrome-pad-x);
+    left: var(--osem-app-chrome-pad-x);
+    width: auto;
+    max-width: none;
+  }
+
+  .osem-notice__message {
+    margin-right: 0;
+  }
+
+  .osem-notice__close {
+    top: 0.52rem;
+  }
+}
+
+/* 全局 dialog：小屏上确认/取消垂直满宽，主按钮在下（与 DOM 顺序一致，拇指触达更稳） */
+@media (max-width: 480px) {
+  .osem-dialog__actions {
+    flex-direction: column;
+    align-items: stretch;
+    padding-bottom: max(0.92rem, env(safe-area-inset-bottom, 0px));
+  }
+
+  .osem-dialog__btn {
+    min-width: unset;
+    width: 100%;
+    min-height: 2.75rem;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023.98px) {
+  .osem-dialog__panel {
+    max-width: min(540px, calc(100vw - 2 * var(--osem-app-chrome-pad-x)));
+  }
+}

@@ -1,0 +1,2 @@
+# OpenSEM Celery tasks package
+

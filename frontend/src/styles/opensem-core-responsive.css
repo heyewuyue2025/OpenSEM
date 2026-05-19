@@ -1,0 +1,42 @@
+/**
+ * 数据页 / 建模页：在 375 / 768 档补充可读性与焦点扫读，与 opensem-core-layout 契约并存。
+ * 不覆盖根节点上由 JS 注入的 --osem-section-gap 等，仅对不可 token 的局部排版做轻量媒体查询。
+ */
+
+@media (max-width: 767.98px) {
+  .osem-core-page.data-view .osem-core-intro,
+  .osem-core-page.model-view .osem-core-intro,
+  .osem-core-page.data-view .parse-msg {
+    line-height: 1.65;
+  }
+
+  .osem-core-page.data-view .view-layout {
+    gap: clamp(1.05rem, 3.5vw, 1.35rem);
+  }
+
+  .osem-core-page .section-label,
+  .osem-core-page .sidebar-label {
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+  }
+
+  .osem-core-page :is(button, .osem-btn, .mi-apply-btn, .mi-copy-btn, .qa-item) {
+    min-height: 40px;
+  }
+
+  .osem-core-page :is(input, select, textarea) {
+    min-height: 40px;
+    font-size: 16px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023.98px) {
+  .osem-core-page.data-view .view-layout {
+    gap: clamp(1.25rem, 2.4vw, 1.6rem);
+  }
+
+  .osem-core-page .section-label,
+  .osem-core-page .sidebar-label {
+    font-size: 0.74rem;
+  }
+}

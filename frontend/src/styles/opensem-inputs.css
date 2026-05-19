@@ -1,0 +1,108 @@
+/**
+ * OpenSEM 核心页表单控件（DataView / ModelView / ResultsView）
+ * 与按钮体系一致：focus 使用 --accent-cta；禁用/错误态可回归。
+ */
+
+.osem-field-label {
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--text-muted);
+  line-height: 1.25;
+}
+
+.osem-input,
+.osem-select,
+.osem-textarea {
+  box-sizing: border-box;
+  margin: 0;
+  max-width: 100%;
+  padding: 0.48rem 0.65rem;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-sm);
+  background: var(--surface-1);
+  color: var(--text-primary);
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: 0.9rem;
+  line-height: 1.35;
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast),
+    opacity var(--transition-fast),
+    background var(--transition-fast);
+}
+
+.osem-textarea {
+  resize: vertical;
+  min-height: 5rem;
+  width: 100%;
+}
+
+.osem-select {
+  cursor: pointer;
+}
+
+.osem-input::placeholder,
+.osem-textarea::placeholder {
+  color: var(--text-muted);
+  opacity: 0.8;
+}
+
+.osem-input:disabled,
+.osem-select:disabled,
+.osem-textarea:disabled {
+  opacity: 0.58;
+  cursor: not-allowed;
+  background: rgba(8, 14, 26, 0.6);
+  color: var(--text-secondary);
+}
+
+.osem-input:focus-visible,
+.osem-select:focus-visible,
+.osem-textarea:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-color: var(--accent);
+  box-shadow: var(--focus-ring);
+}
+
+.osem-input:disabled:focus-visible,
+.osem-select:disabled:focus-visible,
+.osem-textarea:disabled:focus-visible {
+  outline: none;
+  border-color: var(--border-light);
+}
+
+/* 紧凑行内选择（变量类型、MI 筛选等） */
+.osem-select--compact {
+  padding: 0.24rem 0.45rem;
+  font-size: 0.78rem;
+}
+
+/* 等宽代码区（建模语法预览等） */
+.osem-textarea--mono {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.85rem;
+}
+
+/* 错误贴边：字段级校验失败 */
+.osem-input--invalid,
+.osem-select--invalid,
+.osem-textarea--invalid,
+.osem-input[aria-invalid='true'],
+.osem-select[aria-invalid='true'],
+.osem-textarea[aria-invalid='true'] {
+  border-color: var(--error);
+  box-shadow: 0 0 0 1px rgba(214, 69, 69, 0.3);
+}
+
+.osem-input--invalid:focus-visible,
+.osem-select--invalid:focus-visible,
+.osem-textarea--invalid:focus-visible,
+.osem-input[aria-invalid='true']:focus-visible,
+.osem-select[aria-invalid='true']:focus-visible,
+.osem-textarea[aria-invalid='true']:focus-visible {
+  outline-color: var(--error);
+  border-color: var(--error);
+}

@@ -1,0 +1,69 @@
+.osem-feedback {
+  margin-top: 0.6rem;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-md);
+  background: linear-gradient(150deg, rgba(10, 19, 35, 0.82), rgba(8, 15, 28, 0.84));
+  backdrop-filter: blur(6px);
+  border-left-width: 3px;
+}
+
+.osem-feedback.is-loading {
+  border-color: rgba(139, 203, 255, 0.45);
+  box-shadow: inset 0 0 0 1px rgba(139, 203, 255, 0.2);
+}
+
+.osem-feedback.is-success {
+  border-color: rgba(57, 197, 136, 0.52);
+  box-shadow: inset 0 0 0 1px rgba(57, 197, 136, 0.24);
+}
+
+.osem-feedback.is-warning {
+  border-color: rgba(243, 178, 95, 0.55);
+  box-shadow: inset 0 0 0 1px rgba(243, 178, 95, 0.2);
+}
+
+.osem-feedback.is-error {
+  border-color: rgba(240, 122, 134, 0.58);
+  box-shadow: inset 0 0 0 1px rgba(240, 122, 134, 0.2);
+}
+
+.osem-feedback.is-empty {
+  border-color: rgba(159, 178, 213, 0.44);
+  box-shadow: inset 0 0 0 1px rgba(159, 178, 213, 0.14);
+}
+
+.osem-feedback-text {
+  margin: 0;
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .osem-feedback {
+    backdrop-filter: none;
+  }
+}
+
+.osem-feedback-detail {
+  margin: 0.3rem 0 0;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  line-height: 1.58;
+}
+
+@media (max-width: 767.98px) {
+  .osem-feedback {
+    padding: 0.56rem 0.62rem;
+  }
+
+  .osem-feedback-text {
+    font-size: 0.84rem;
+  }
+
+  .osem-feedback-detail {
+    font-size: 0.79rem;
+  }
+}

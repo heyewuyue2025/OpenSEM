@@ -1,0 +1,203 @@
+/* === OpenSEM Design System ===
+   Aesthetic: academic-trustworthy, modern, low-noise */
+
+:root {
+  /* Typography: CJK + Latin unified stacks */
+  --font-body:
+    'HarmonyOS Sans SC',
+    'MiSans',
+    'Source Han Sans SC',
+    'Noto Sans SC',
+    'Roboto',
+    'Open Sans',
+    system-ui,
+    -apple-system,
+    sans-serif;
+  --font-display:
+    'Montserrat',
+    'HarmonyOS Sans SC',
+    'MiSans',
+    'Roboto',
+    'Open Sans',
+    var(--font-body);
+  --font-ui: var(--font-body);
+  --font-data:
+    'Roboto Mono',
+    'JetBrains Mono',
+    'SFMono-Regular',
+    Menlo,
+    Consolas,
+    monospace;
+
+  /* Typography scale */
+  --type-hero: clamp(2rem, 5vw, 4rem);
+  --type-h1: clamp(1.7rem, 3.4vw, 3rem);
+  --type-h2: clamp(1.4rem, 2.3vw, 2rem);
+  --type-h3: clamp(1.15rem, 1.9vw, 1.5rem);
+  --type-body: 1rem;
+  --type-caption: 0.875rem;
+  --type-data: 0.86rem;
+  --line-hero: 1.14;
+  --line-heading: 1.28;
+  --line-body: 1.62;
+  --line-dense: 1.5;
+
+  /* Semantic color system (HomeStellaria baseline) */
+  --bg-cream: #060b15;
+  --bg-paper: rgba(10, 18, 33, 0.88);
+  --bg-surface-soft: rgba(15, 27, 49, 0.72);
+  --panel: rgba(9, 16, 30, 0.92);
+  --panel-hover: rgba(13, 24, 44, 0.95);
+  --text-primary: #e9f2ff;
+  --text-secondary: #c1d1eb;
+  --text-muted: #90a6cb;
+  --accent: #8bc8ff;
+  --accent-hover: #abd9ff;
+  --accent-subtle: rgba(125, 196, 255, 0.2);
+  --accent-cta: #efb878;
+  --accent-cta-hover: #f4c992;
+  --accent-cta-subtle: rgba(239, 184, 120, 0.16);
+  --border: rgba(120, 153, 212, 0.42);
+  --border-light: rgba(111, 144, 198, 0.28);
+  --success: #39c588;
+  --error: #f07a86;
+  --warning: #f3b25f;
+  --info: #8bc8ff;
+
+  /* Layout, radius, shadow */
+  --space-1: 0.5rem;
+  --space-2: 1rem;
+  --space-3: 1.5rem;
+  --space-4: 2rem;
+  --space-5: 3rem;
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --shadow-sm: 0 10px 24px rgba(1, 5, 14, 0.45);
+  --shadow-md: 0 18px 42px rgba(1, 5, 14, 0.52);
+  --shadow-lg: 0 30px 70px rgba(1, 5, 14, 0.62);
+  --shadow-glow: 0 0 0 1px rgba(132, 191, 255, 0.12), 0 24px 56px rgba(2, 7, 19, 0.6);
+
+  /* Cinematic-sem theme contracts for reuse */
+  --surface-0: rgba(6, 12, 23, 0.9);
+  --surface-1: rgba(10, 18, 33, 0.88);
+  --surface-2: rgba(14, 26, 47, 0.82);
+  --surface-3: rgba(19, 34, 60, 0.72);
+  --surface-elevated: linear-gradient(160deg, rgba(13, 23, 42, 0.94), rgba(7, 14, 27, 0.96));
+  --surface-highlight: linear-gradient(120deg, rgba(141, 205, 255, 0.12), rgba(141, 205, 255, 0) 58%);
+  --line-soft: rgba(114, 150, 210, 0.22);
+  --line-strong: rgba(146, 189, 255, 0.46);
+  --focus-ring: 0 0 0 3px rgba(137, 201, 255, 0.28);
+  --panel-title: #f0f6ff;
+  --panel-subtitle: #9ab1d7;
+  --state-loading: #8bc8ff;
+  --state-empty: #9fb2d5;
+  --state-error: #f07a86;
+  --state-success: #39c588;
+
+  /* Motion */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-fast: 0.16s var(--ease-out-expo);
+  --transition-smooth: 0.24s var(--ease-out-expo);
+
+  /* App chrome：与 `APP_CHROME_PAD_X.desktop` 同步 */
+  --osem-app-chrome-pad-x: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+@media (max-width: 767.98px) {
+  :root {
+    /* sync: `frontend/src/ui/appChromeRhythm.js` — APP_CHROME_PAD_X.narrow */
+    --osem-app-chrome-pad-x: clamp(0.85rem, 4.2vw, 1.2rem);
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023.98px) {
+  :root {
+    /* sync: `frontend/src/ui/appChromeRhythm.js` — APP_CHROME_PAD_X.tablet */
+    --osem-app-chrome-pad-x: clamp(1.1rem, 2.2vw, 1.6rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --transition-fast: 0.01ms;
+    --transition-smooth: 0.01ms;
+  }
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  font-family: var(--font-body);
+  font-size: var(--type-body);
+  line-height: var(--line-body);
+  color: var(--text-primary);
+  background: var(--bg-cream);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 14% 10%, rgba(106, 176, 255, 0.22), rgba(106, 176, 255, 0) 42%),
+    radial-gradient(circle at 84% 84%, rgba(255, 177, 122, 0.14), rgba(255, 177, 122, 0) 38%),
+    linear-gradient(180deg, #04070f 0%, #070d18 44%, #07101e 100%);
+  z-index: -1;
+}
+
+::selection {
+  background: rgba(141, 206, 255, 0.3);
+  color: #f8fbff;
+}
+
+#app {
+  min-height: 100vh;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(146, 189, 255, 0.42) rgba(12, 22, 40, 0.55);
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+*::-webkit-scrollbar-track {
+  background: rgba(12, 22, 40, 0.55);
+}
+
+*::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  border: 2px solid rgba(12, 22, 40, 0.55);
+  background: linear-gradient(180deg, rgba(143, 202, 255, 0.56), rgba(112, 171, 233, 0.56));
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, rgba(163, 215, 255, 0.7), rgba(130, 186, 245, 0.7));
+}
+
+/* Reveal animation utility */
+.reveal {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity var(--transition-smooth), transform var(--transition-smooth);
+}
+.visible .reveal {
+  opacity: 1;
+  transform: translateY(0);
+}

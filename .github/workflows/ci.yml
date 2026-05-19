@@ -1,0 +1,205 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+    tags:
+      - "v*"
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  backend:
+    name: Backend tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: backend/requirements*.txt
+      - name: Install dependencies
+        run: |
+          python -m pip install -U pip
+          pip install -r requirements.txt -r requirements-dev.txt
+      - name: Pytest
+        run: python -m pytest -q
+
+  frontend:
+    name: Frontend build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: npm ci
+        run: npm ci
+      - name: Build
+        run: npm run build
+
+  opensem-1-4-doc-evidence:
+    name: OpenSEM 1.4 doc evidence harness (G3)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: backend/requirements*.txt
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: Install backend deps
+        working-directory: backend
+        run: |
+          python -m pip install -U pip
+          pip install -r requirements.txt -r requirements-dev.txt
+      - name: Install frontend deps
+        working-directory: frontend
+        run: npm ci
+      - name: Run verify_opensem_1_4_evidence.py
+        run: python scripts/verify_opensem_1_4_evidence.py
+
+  docker-lavaan:
+    name: Docker (lavaan required)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build images (default lavaan on)
+        env:
+          OPENSEM_WITH_LAVAAN: "1"
+        run: docker compose build
+
+      - name: Start stack
+        env:
+          OPENSEM_WITH_LAVAAN: "1"
+          OPENSEM_REQUIRE_LAVAAN: "1"
+        run: docker compose up -d
+
+      - name: Wait for health
+        run: |
+          python -c "import time, json, urllib.request; \
+          url='http://127.0.0.1:8020/api/health'; \
+          last=None; \
+          for i in range(90): \
+            try: \
+              with urllib.request.urlopen(url, timeout=2) as r: \
+                last=json.loads(r.read().decode('utf-8')); \
+                assert last.get('status')=='healthy', last; \
+                assert last.get('lavaan',{}).get('available') is True, last; \
+                print('ok'); \
+                raise SystemExit(0); \
+            except Exception as e: \
+              time.sleep(2); \
+          raise SystemExit('healthcheck did not become healthy: %r' % (last,))"
+
+      - name: E2E — MI + lavaan 不变性序列（HTTP）
+        env:
+          OPENSEM_BASE_URL: http://127.0.0.1:8020
+        run: python backend/scripts/e2e_lavaan_api.py
+
+      - name: Show logs on failure
+        if: failure()
+        run: docker compose logs --no-color --tail=200
+
+      - name: Stop stack
+        if: always()
+        run: docker compose down -v
+
+  docker-lite:
+    name: Docker (lite / degraded)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build images (lite: no lavaan)
+        env:
+          OPENSEM_WITH_LAVAAN: "0"
+        run: docker compose build
+
+      - name: Start stack (lite)
+        env:
+          OPENSEM_WITH_LAVAAN: "0"
+          OPENSEM_REQUIRE_LAVAAN: "0"
+        run: docker compose up -d
+
+      - name: Wait for health (lite mode expected)
+        run: |
+          python -c "import time, json, urllib.request; \
+          url='http://127.0.0.1:8020/api/health'; \
+          last=None; \
+          for i in range(90): \
+            try: \
+              with urllib.request.urlopen(url, timeout=2) as r: \
+                last=json.loads(r.read().decode('utf-8')); \
+                assert last.get('status')=='healthy', last; \
+                assert last.get('mode')=='lite', last; \
+                assert last.get('require_lavaan') is False, last; \
+                print('ok'); \
+                raise SystemExit(0); \
+            except Exception: \
+              time.sleep(2); \
+          raise SystemExit('healthcheck did not become healthy: %r' % (last,))"
+
+      - name: E2E — main flow minimal (lite, success + failure)
+        env:
+          OPENSEM_BASE_URL: http://127.0.0.1:8020
+        run: python backend/scripts/e2e_main_minimal.py
+
+      - name: Show logs on failure
+        if: failure()
+        run: docker compose logs --no-color --tail=200
+
+      - name: Stop stack
+        if: always()
+        run: docker compose down -v
+
+  ghcr-release:
+    name: Release (GHCR)
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    permissions:
+      contents: read
+      packages: write
+    env:
+      IMAGE_NAME: ghcr.io/${{ github.repository_owner }}/OpenSEM
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract Docker metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.IMAGE_NAME }}
+          tags: |
+            type=semver,pattern={{version}}
+            type=raw,value=latest
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: ./backend
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}

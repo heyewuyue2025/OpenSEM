@@ -1,0 +1,82 @@
+# OpenSEM 本地开发环境
+#
+# 标准启动（默认：构建镜像安装 R + lavaan + rpy2，且 healthcheck 强制 lavaan 可用）：
+#   docker compose up -d
+#
+# 默认策略（更偏开发体验）：
+# - OPENSEM_CELERY_EAGER 默认开启：不依赖 Redis/worker 也能跑通主流程（任务同步执行）
+# - 如需异步 worker（生产口径/压测），使用 async profile：
+#     OPENSEM_CELERY_EAGER=0 OPENSEM_REDIS_URL=redis://redis:6379/0 docker compose --profile async up -d
+#
+# 若你修改了后端依赖 / 需要强制重装 R 包：
+#   OPENSEM_WITH_LAVAAN=1 docker compose build --no-cache && docker compose up -d
+#
+# 轻量开发（仅 semopy，允许降级，不强制 lavaan）：
+#   OPENSEM_WITH_LAVAAN=0 OPENSEM_REQUIRE_LAVAAN=0 docker compose up -d
+#
+# 后端: http://localhost:8020（与 frontend/vite.config.js 默认代理一致）
+# Redis: localhost:6379
+
+name: opensem
+
+services:
+  redis:
+    profiles: ["async"]
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+  backend:
+    build:
+      context: ./backend
+      args:
+        WITH_LAVAAN: ${OPENSEM_WITH_LAVAAN:-1}
+    ports:
+      - "8020:8000"
+    volumes:
+      - ./backend:/app
+    command: uvicorn app.main:app --host 0.0.0.0 --reload --port 8000
+    environment:
+      - PYTHONUNBUFFERED=1
+      # 允许 OPENSEM_REDIS_URL 留空：此时后端将自动 eager（同步）执行任务，避免本地必须起 Redis/worker
+      - OPENSEM_REDIS_URL=${OPENSEM_REDIS_URL:-}
+      - OPENSEM_CELERY_BROKER_URL=${OPENSEM_CELERY_BROKER_URL:-${OPENSEM_REDIS_URL:-}}
+      - OPENSEM_CELERY_RESULT_BACKEND=${OPENSEM_CELERY_RESULT_BACKEND:-${OPENSEM_REDIS_URL:-}}
+      - OPENSEM_CELERY_EAGER=${OPENSEM_CELERY_EAGER:-1}
+      - OPENSEM_REQUIRE_LAVAAN=${OPENSEM_REQUIRE_LAVAAN:-1}
+      - OPENSEM_WITH_LAVAAN=${OPENSEM_WITH_LAVAAN:-1}
+      - OPENSEM_UPLOAD_MAX_SIZE_MB=${OPENSEM_UPLOAD_MAX_SIZE_MB:-100}
+      - OPENSEM_UPLOAD_MAX_ROWS=${OPENSEM_UPLOAD_MAX_ROWS:-200000}
+      - OPENSEM_UPLOAD_MAX_COLS=${OPENSEM_UPLOAD_MAX_COLS:-2000}
+      - OPENSEM_PARSE_TIMEOUT_SECONDS=${OPENSEM_PARSE_TIMEOUT_SECONDS:-30}
+      - OPENSEM_PARSE_CONCURRENCY=${OPENSEM_PARSE_CONCURRENCY:-4}
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/health').read(); print('ok')"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+
+  celery-worker:
+    profiles: ["async"]
+    build:
+      context: ./backend
+      args:
+        WITH_LAVAAN: ${OPENSEM_WITH_LAVAAN:-1}
+    volumes:
+      - ./backend:/app
+    command: celery -A app.celery_app.celery_app worker -l info
+    environment:
+      - PYTHONUNBUFFERED=1
+      - OPENSEM_REDIS_URL=${OPENSEM_REDIS_URL:-redis://redis:6379/0}
+      - OPENSEM_CELERY_BROKER_URL=${OPENSEM_CELERY_BROKER_URL:-${OPENSEM_REDIS_URL:-redis://redis:6379/0}}
+      - OPENSEM_CELERY_RESULT_BACKEND=${OPENSEM_CELERY_RESULT_BACKEND:-${OPENSEM_REDIS_URL:-redis://redis:6379/0}}
+      - OPENSEM_CELERY_EAGER=${OPENSEM_CELERY_EAGER:-0}
+      - OPENSEM_REQUIRE_LAVAAN=${OPENSEM_REQUIRE_LAVAAN:-1}
+      - OPENSEM_WITH_LAVAAN=${OPENSEM_WITH_LAVAAN:-1}
+      - OPENSEM_UPLOAD_MAX_SIZE_MB=${OPENSEM_UPLOAD_MAX_SIZE_MB:-100}
+      - OPENSEM_UPLOAD_MAX_ROWS=${OPENSEM_UPLOAD_MAX_ROWS:-200000}
+      - OPENSEM_UPLOAD_MAX_COLS=${OPENSEM_UPLOAD_MAX_COLS:-2000}
+      - OPENSEM_PARSE_TIMEOUT_SECONDS=${OPENSEM_PARSE_TIMEOUT_SECONDS:-30}
+      - OPENSEM_PARSE_CONCURRENCY=${OPENSEM_PARSE_CONCURRENCY:-4}
+    depends_on:
+      - redis

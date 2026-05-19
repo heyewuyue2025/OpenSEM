@@ -1,0 +1,126 @@
+.osem-core-page .panel,
+.osem-core-page .card,
+.osem-core-page .tile,
+.osem-surface {
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-md);
+  background: var(--surface-elevated);
+  box-shadow: var(--shadow-sm);
+}
+
+.osem-core-page .section-label,
+.osem-core-page .sidebar-label,
+.osem-eyebrow {
+  color: var(--panel-subtitle);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.osem-core-page .section-title,
+.osem-title {
+  color: var(--panel-title);
+  line-height: var(--line-heading);
+}
+
+.osem-link {
+  color: var(--accent);
+  text-decoration-color: rgba(139, 200, 255, 0.42);
+  text-underline-offset: 2px;
+  transition: color var(--transition-fast), text-decoration-color var(--transition-fast);
+}
+
+.osem-link:hover {
+  color: var(--accent-hover);
+  text-decoration-color: rgba(171, 217, 255, 0.74);
+}
+
+.osem-link:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  box-shadow: var(--focus-ring);
+}
+
+.osem-status-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 1.4rem;
+  padding: 0.1rem 0.52rem;
+  border-radius: 999px;
+  border: 1px solid var(--line-soft);
+  background: var(--surface-2);
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.osem-status-pill--loading {
+  color: #d8eeff;
+  border-color: rgba(139, 200, 255, 0.52);
+  background: rgba(139, 200, 255, 0.16);
+}
+
+.osem-status-pill--success {
+  color: #d9ffe8;
+  border-color: rgba(57, 197, 136, 0.56);
+  background: rgba(57, 197, 136, 0.14);
+}
+
+.osem-status-pill--warning {
+  color: #ffe8cd;
+  border-color: rgba(243, 178, 95, 0.56);
+  background: rgba(243, 178, 95, 0.14);
+}
+
+.osem-status-pill--error {
+  color: #ffd8df;
+  border-color: rgba(240, 122, 134, 0.6);
+  background: rgba(240, 122, 134, 0.14);
+}
+
+.osem-state-block {
+  display: grid;
+  gap: 0.3rem;
+  margin-top: 0.6rem;
+  padding: 0.7rem 0.8rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--line-soft);
+  background: linear-gradient(160deg, rgba(10, 18, 33, 0.9), rgba(8, 15, 28, 0.88));
+}
+
+.osem-state-block__title {
+  margin: 0;
+  font-size: 0.87rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.osem-state-block__detail {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.osem-state-block--loading {
+  border-color: rgba(139, 200, 255, 0.44);
+}
+
+.osem-state-block--empty {
+  border-color: rgba(159, 178, 213, 0.42);
+}
+
+.osem-state-block--error {
+  border-color: rgba(240, 122, 134, 0.54);
+}
+
+.osem-state-block--success {
+  border-color: rgba(57, 197, 136, 0.52);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .osem-link,
+  .osem-status-pill {
+    transition: none !important;
+  }
+}
